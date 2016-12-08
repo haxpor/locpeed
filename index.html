@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta https-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<style type="text/css">
 		body, html{
@@ -57,7 +57,7 @@
 			z-index: 2;
 		}
 		.map_popup .title {
-			background: url("http://map.baidu.com/img/popup_title.gif") repeat scroll 0 0 transparent;
+			background: url("https://map.baidu.com/img/popup_title.gif") repeat scroll 0 0 transparent;
 			color: #6688CC;
 			font-weight: bold;
 			height: 24px;
@@ -65,7 +65,7 @@
 			padding-left: 7px;
 		}
 		.map_popup button {
-			background: url("http://map.baidu.com/img/popup_close.gif") no-repeat scroll 0 0 transparent;
+			background: url("https://map.baidu.com/img/popup_close.gif") no-repeat scroll 0 0 transparent;
 			cursor: pointer;
 			height: 12px;
 			position: absolute;
@@ -74,12 +74,15 @@
 			width: 12px;
 		}	
 	</style>
-	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=A4749739227af1618f7b0d1b588c0e85"></script>
+	<script>
+		window.BMap_loadScriptTime = (new Date).getTime();
+	</script>
+	<script type="text/javascript" src="https://api.map.baidu.com/getscript?v=2.0&ak=vPe4zpMIqQ5diMo7jnaRwsg2STwwhVLp&services=&t=20161208141700"></script>
 	<!-- 加载百度地图样式信息窗口 -->
-	<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
-	<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+	<script type="text/javascript" src="https://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+	<link rel="stylesheet" href="https://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
 	<!-- 加载城市列表 -->
-	<script type="text/javascript" src="http://api.map.baidu.com/library/CityList/1.2/src/CityList_min.js"></script>
+	<script type="text/javascript" src="https://api.map.baidu.com/library/CityList/1.2/src/CityList_min.js"></script>
 	<title>叠加麻点图层</title>
 </head>
 <body>
@@ -101,7 +104,7 @@
 <script type="text/javascript">
 	// 百度地图API功能
 	var map = new BMap.Map("l-map");          // 创建地图实例
-	var point = new BMap.Point(116.403694,39.927552);  // 创建点坐标
+	var point = new BMap.Point(113.976818,22.607457);  // 创建点坐标
 	map.centerAndZoom(point, 15);                 // 初始化地图，设置中心点坐标和地图级别
 	map.enableScrollWheelZoom();
 	map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
@@ -110,20 +113,23 @@
 		if (customLayer) {
 			map.removeTileLayer(customLayer);
 		}
-		customLayer=new BMap.CustomLayer({
-			geotableId: 30960,
+		customLayer = new BMap.CustomLayer({
+			geotableId: 159741,
 			q: '', //检索关键字
 			tags: '', //空格分隔的多字符串
-			filter: '' //过滤条件,参考http://developer.baidu.com/map/lbs-geosearch.htm#.search.nearby
+			filter: '' //过滤条件,参考https://developer.baidu.com/map/lbs-geosearch.htm#.search.nearby
 		});
 		map.addTileLayer(customLayer);
 		customLayer.addEventListener('hotspotclick',callback);
 	}
 	function callback(e)//单击热点图层
 	{
+		 	console.log("clicked");
 			var customPoi = e.customPoi;//poi的默认字段
 			var contentPoi=e.content;//poi的自定义字段
-			var content = '<p style="width:280px;margin:0;line-height:20px;">地址：' + customPoi.address + '<br/>价格:'+contentPoi.dayprice+'元'+'</p>';
+			console.log("customPoi: ", customPoi);
+			console.log("contentPoi: ", contentPoi);
+			var content = '<p style="width:280px;margin:0;line-height:20px;">地址：' + customPoi.address + '<br/>' + "Down: " + contentPoi.download_speed + ", Up: " + contentPoi.upload_speed + '</p>';
 			var searchInfoWindow = new BMapLib.SearchInfoWindow(map, content, {
 				title: customPoi.title, //标题
 				width: 290, //宽度
@@ -139,11 +145,13 @@
 	}
 	document.getElementById("open").onclick = function(){
 		addCustomLayer();
+		console.log("added custom layer");
 	};
 	document.getElementById("open").click();
 	document.getElementById("close").onclick = function(){
 		if (customLayer) {
 			map.removeTileLayer(customLayer);
+			console.log("removed tile layer");
 		}
 	};
 	// 创建CityList对象，并放在citylist_container节点内
